@@ -1,0 +1,80 @@
+import hector.*
+import plants.*
+import farmLimits.*
+import wollok.game.*
+
+object dialogs {
+	method noHayPlanta(player) = game.say(player, "No tengo nada para regar!!!")
+	method stocknWealth(player) = game.say(player, "I have " + " coins of Gold and " + player.plantsReadyToSel() + " plants Ready to Sell!!!")
+}
+
+object tablero {
+	const listaDeVisuales = []
+	var tabPlayer
+	
+	method addPlayer(unPlayer) { tabPlayer = unPlayer}
+	method addTabVisual(unaVisual) { listaDeVisuales.add(unaVisual)}
+	method remTabVisual(unaVisual) { listaDeVisuales.remove(unaVisual)}
+	
+	method configurar(heigh, width, nombre, background) {
+		game.title(nombre)
+		game.height(heigh)
+		game.width(width)
+		game.ground(background)
+	}
+	
+	method drawAutoposVisuals() {
+		listaDeVisuales.forEach {unVisual => game.addVisual(unVisual)}
+		game.addVisualCharacter(tabPlayer)		
+	}	
+}
+
+program FarmvilleGame {
+	
+//	CONFIG	
+	tablero.configurar(10, 10, "Farm Ville", "ground.png")
+
+//Crear objetos y colliders
+
+
+//	VISUALES
+	
+	//Players
+	tablero.addPlayer(hector)
+	tablero.drawAutoposVisuals()
+
+// Dialogos
+const noHayPlantas = {player => game.say(player, "No tengo nada para regar!!!")}
+const noHayPlantas = {player => game.say(player, "No tengo nada para regar!!!")}
+
+//Items	
+//	crearManzana.apply(game.at(6,4))
+	
+
+//	TECLADO
+const player1 = hector
+	
+const moveUp = {player => player.move(player.position().up(1))}
+const moveDown = {player => player.move(player.position().down(1))}
+const moveLeft = {player => player.move(player.position().left(1))}
+const moveRight = {player => player.move(player.position().right(1))}
+
+//const spawn = {objeto => objeto.position(posicionRandom.nuevaPosicion())}
+
+keyboard.up().onPressDo { moveUp.apply(player1) }
+keyboard.down().onPressDo { moveDown.apply(player1) }
+keyboard.left().onPressDo { moveLeft.apply(player1) }
+keyboard.right().onPressDo { moveRight.apply(player1) }
+
+keyboard.m().onPressDo { player1.plantCorn() }
+keyboard.t().onPressDo { player1.plantWeath() }
+keyboard.o().onPressDo { player1.plantTomaco() }	
+
+keyboard.c().onPressDo { player1.harvest() }
+
+keyboard.backspace().onPressDo { player1.wealth() }
+keyboard.v().onPressDo { player1.sell() }
+
+//	START
+game.start()
+}
